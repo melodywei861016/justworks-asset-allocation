@@ -32,9 +32,9 @@ async function fetchRates() {
       BTC: Number(data.data.rates.BTC),
       ETH: Number(data.data.rates.ETH),
     };
-  } catch (error) {
-    error.value = `Error fetching exchange rates: ${error.message}`;
-    console.log("Error fetching exchange rates:", error);
+  } catch (err) {
+    error.value = `Error fetching exchange rates: ${err.message}`;
+    console.log("Error fetching exchange rates:", err);
   } finally {
     loading.value = false;
   }
@@ -51,7 +51,8 @@ function formatCurrency(amount) {
 
 function formatHoldings() {
   if (holdings.value) {
-    holdings.value = parseFloat(holdings.value).toFixed(2);
+    const holdingsValue = Math.max(0, parseFloat(holdings.value));
+    holdings.value = holdingsValue.toFixed(2);
   }
 }
 </script>
@@ -65,6 +66,7 @@ function formatHoldings() {
         Coinbase rates.
       </p>
     </section>
+
     <section class="input-card">
       <div class="field-group">
         <label for="investable-assets">Investable Assets ($):</label>
@@ -76,13 +78,16 @@ function formatHoldings() {
           min="0"
           step="0.01"
           @blur="formatHoldings"
+          inputmode="decimal"
         />
       </div>
     </section>
+
     <section class="status-message">
       <p v-if="loading">Fetching exchange rates...</p>
       <p v-else-if="error" class="error-message">{{ error }}</p>
     </section>
+
     <section v-if="!loading && !error" class="results">
       <div class="allocation-card">
         <div class="field-group">
@@ -93,6 +98,7 @@ function formatHoldings() {
             readonly
           />
         </div>
+
         <div class="allocation-info">
           <p>
             <b>Allocation (USD):</b>
@@ -103,6 +109,7 @@ function formatHoldings() {
           </p>
         </div>
       </div>
+
       <div class="allocation-card">
         <div class="field-group">
           <label for="eth-allocation">30% ETH Allocation (ETH):</label>
@@ -112,6 +119,7 @@ function formatHoldings() {
             readonly
           />
         </div>
+
         <div class="allocation-info">
           <p>
             <b>Allocation (USD):</b>

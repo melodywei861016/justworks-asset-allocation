@@ -189,3 +189,10 @@ p {
 .allocation-card:last-child {
   border-top: 3px solid #627eea;
 }
+
+.helper-text {
+  font-size: 14px;
+  line-height: 1.4;
+  color: #a1a1aa;
+  text-align: left;
+}
