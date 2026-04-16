@@ -27,7 +27,19 @@ async function fetchRates() {
     const response = await fetch(
       "https://api.coinbase.com/v2/exchange-rates?currency=USD",
     );
+
+    if (!response.ok) {
+      throw new Error(`Request failed with status ${response.status}`);
+    }
+
     const data = await response.json();
+
+    const btcRate = Number(data?.data?.rates?.BTC);
+    const ethRate = Number(data?.data?.rates?.ETH);
+
+    if (!Number.isFinite(btcRate) || !Number.isFinite(ethRate)) {
+      throw new Error("Invalid exchange rate data received");
+    }
 
     rates.value = {
       BTC: Number(data.data.rates.BTC),
